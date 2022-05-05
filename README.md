@@ -6,5 +6,5 @@
 2. Run "redis-cli"
 3. Run "ping" to check to see if the servier is working
 4. Run "flushall" if you need to delete all the keys of all the existing databases
-5. Run "quit" to get out of redis-cli
+5. Run "quit" to get out of redis-cli when you are done running/testing this app
 6. Run "sudo service redis-server stop" to stop the server
