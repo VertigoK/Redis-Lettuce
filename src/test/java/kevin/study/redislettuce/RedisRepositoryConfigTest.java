@@ -1,5 +1,6 @@
 package kevin.study.redislettuce;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,13 +15,14 @@ import java.util.Set;
 public class RedisRepositoryConfigTest {
 
     @Autowired
-    StringRedisTemplate stringRedisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
     //String
     @Test
+    @DisplayName("Test for String")
     public void testString() {
         final String key = "testString";
-        //opsForValue: String을 쉽게 Serialize/Deserialize 해주는 interface
+        //opsForValue: Serialize/Deserialize a String
         final ValueOperations<String, String> stringStringValueOperations = stringRedisTemplate.opsForValue();
 
         stringStringValueOperations.set(key, "1");
@@ -31,15 +33,16 @@ public class RedisRepositoryConfigTest {
         final String result_2 = stringStringValueOperations.get(key);
         System.out.println("result_2 = " + result_2);
 
-        //redis-cli 명령어:
-        //- Get key
+        //redis-cli command:
+        //get testString
     }
 
     //List
     @Test
+    @DisplayName("Test for List")
     public void testList() {
         final String key = "testList";
-        //opsForList: List를 쉽게 Serialize/Deserialize 해주는 interface
+        //opsForList: Serialize/Deserialize a List
         final ListOperations<String, String> stringStringListOperations = stringRedisTemplate.opsForList();
 
         stringStringListOperations.rightPush(key, "H");
@@ -48,7 +51,7 @@ public class RedisRepositoryConfigTest {
         stringStringListOperations.rightPush(key, "L");
         stringStringListOperations.rightPush(key, "O");
 
-        stringStringListOperations.rightPushAll(key, " ", "W", "O", "R", "D");
+        stringStringListOperations.rightPushAll(key, " ", "W", "O", "R", "L", "D");
 
         final String character_1 = stringStringListOperations.index(key, 1);
         System.out.println("character_1 = " + character_1);
@@ -56,20 +59,21 @@ public class RedisRepositoryConfigTest {
         final Long size = stringStringListOperations.size(key);
         System.out.println("size = " + size);
 
-        final List<String> resultRange = stringStringListOperations.range(key, 0, 9);
+        final List<String> resultRange = stringStringListOperations.range(key, 0, 10);
         assert resultRange != null;
         System.out.println("resultRange = " + Arrays.toString(resultRange.toArray()));
 
-        //redis-cli 명령어:
-        //- INDEX key index
-        //- LRANGE key start stop
+        //redis-cli command:
+        //lindex testList 1
+        //lrange testList 0 10
     }
 
     //Set
     @Test
+    @DisplayName("Test for Set")
     public void testSet() {
         final String key = "testSet";
-        //opsForSet: Set을 쉽게 Serialize/Deserialize 해주는 interface
+        //opsForSet: Serialize/Deserialize a Set
         SetOperations<String, String> stringStringSetOperations = stringRedisTemplate.opsForSet();
 
         stringStringSetOperations.add(key, "H");
@@ -91,15 +95,16 @@ public class RedisRepositoryConfigTest {
             System.out.println("cursor = " + cursor.next());
         }
 
-        //redis-cli 명령어:
-        //- SMEMBERS key
+        //redis-cli command:
+        //smembers testSet
     }
 
     //Sorted Set
     @Test
+    @DisplayName("Test for Sorted Set")
     public void testSortedSet() {
         final String key = "testSortedSet";
-        //opsForZSet: Sorted Set을 쉽게 Serialize/Deserialize 해주는 interface
+        //opsForZSet: Serialize/Deserialize a Sorted Set
         ZSetOperations<String, String> stringStringZSetOperations = stringRedisTemplate.opsForZSet();
 
         stringStringZSetOperations.add(key, "H", 1);
@@ -108,7 +113,7 @@ public class RedisRepositoryConfigTest {
         stringStringZSetOperations.add(key, "L", 15);
         stringStringZSetOperations.add(key, "O", 20);
 
-        Set<String> range = stringStringZSetOperations.range(key, 0, 5);
+        Set<String> range = stringStringZSetOperations.range(key, 0, 4);
         assert range != null;
         System.out.println("range = " + Arrays.toString(range.toArray()));
 
@@ -119,16 +124,17 @@ public class RedisRepositoryConfigTest {
         assert scoreRange != null;
         System.out.println("scoreRange = " + Arrays.toString(scoreRange.toArray()));
 
-        //redis-cli 명령어:
-        //- ZRANGE key start stop [WI THSCORES]
-        //- ZRANGEBYSCORE key min max [WI THSCORES]
+        //redis-cli command:
+        //zrange testSortedSet 0 4
+        //zrange testSortedSet 0 13 byscore
     }
 
     //Hash
     @Test
+    @DisplayName("Test for Hash")
     public void testHash() {
         final String key = "testHash";
-        //opsForHash: Hash를 쉽게 Serialize/Deserialize 해주는 interface
+        //opsForHash: Serialize/Deserialize a Hash
         HashOperations<String, Object, Object> stringObjectObjectHashOperations = stringRedisTemplate.opsForHash();
 
         stringObjectObjectHashOperations.put(key, "Hello", "testHash");
@@ -144,10 +150,10 @@ public class RedisRepositoryConfigTest {
         Long size = stringObjectObjectHashOperations.size(key);
         System.out.println("size = " + size);
 
-        //redis-cli 명령어:
-        //- HGET key field
+        //redis-cli command:
+        //hget testHash Hello2
     }
 
-    //redis-cli 키 전체 삭제 명령어:
-    //flushAll
+    //redis-cli command to delete all the keys:
+    //flushall
 }

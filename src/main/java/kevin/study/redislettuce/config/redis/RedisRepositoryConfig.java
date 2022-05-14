@@ -1,6 +1,6 @@
 package kevin.study.redislettuce.config.redis;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -9,28 +9,25 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-@RequiredArgsConstructor
-@EnableRedisRepositories
 @Configuration
+@EnableRedisRepositories
 public class RedisRepositoryConfig {
 
-//    @Value("${spring.redis.host}")
-//    private String host;
-//
-//    @Value("${spring.redis.port}")
-//    private int port;
+    @Value("${spring.redis.host}")
+    private String host;
 
-    private final RedisProperties redisProperties;
+    @Value("${spring.redis.port}")
+    private int port;
 
     //Lettuce
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(redisProperties.getHost(), redisProperties.getPort());
+        return new LettuceConnectionFactory(host, port);
     }
 
     @Bean
-    public RedisTemplate<?, ?> redisTemplate() {
-        RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         return redisTemplate;

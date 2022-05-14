@@ -4,6 +4,7 @@ import kevin.study.redislettuce.domain.redis.RedisCrud;
 import kevin.study.redislettuce.repository.redis.RedisCrudRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,11 +19,12 @@ public class RedisCrudRepositoryTest {
     private RedisCrudRepository redisCrudRepository;
 
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDown() {
         redisCrudRepository.deleteAll();
     }
 
     @Test
+    @DisplayName("Test for Save and Find")
     public void basicSaveFind() {
         //given
         Long id = 0L;
@@ -45,6 +47,7 @@ public class RedisCrudRepositoryTest {
     }
 
     @Test
+    @DisplayName("Test for Save and Update")
     public void basicSaveUpdate() {
         //given
         Long id = 0L;
