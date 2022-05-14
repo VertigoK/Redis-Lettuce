@@ -4,6 +4,7 @@ import kevin.study.redislettuce.dto.redis.RedisCrudSaveRequestDto;
 import kevin.study.redislettuce.repository.redis.RedisCrudRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,11 +28,12 @@ public class RedisControllerTest {
     private RedisCrudRepository redisCrudRepository;
 
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDown() {
         redisCrudRepository.deleteAll();
     }
 
     @Test
+    @DisplayName("Test for '/'")
     public void basic() {
         //given
         String url = "http://localhost:" + port;
@@ -45,6 +47,7 @@ public class RedisControllerTest {
     }
 
     @Test
+    @DisplayName("Test for '/save'")
     public void basicSaveFind() {
         //given
         String url = "http://localhost:" + port + "/save";
